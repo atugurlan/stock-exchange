@@ -60,6 +60,11 @@ public class Client {
             return;
         }
 
+        if(foundOffer.isCompleted()) {
+            System.out.println("The offer that cannot be modified due to being completed.\n");
+            return;
+        }
+
         if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, foundOffer.getPriceOfStock(), foundOffer.getOfferType())) {
             System.out.println("User has not enough stocks to change the number of stock to the wished value in the offer.\n");
             return;
@@ -77,6 +82,11 @@ public class Client {
             return;
         }
 
+        if(foundOffer.isCompleted()) {
+            System.out.println("The offer that cannot be modified due to being completed.\n");
+            return;
+        }
+
         if(!checkOffer(foundOffer.getNameOfStock(), foundOffer.getNoOfStock(), priceOfStock, foundOffer.getOfferType())) {
             System.out.println("User has not enough money to be able to pay the new prices.\n");
             return;
@@ -91,6 +101,11 @@ public class Client {
 
         if(foundOffer == null) {
             System.out.println("The id of the offer cannot be found.\n");
+            return;
+        }
+
+        if(foundOffer.isCompleted()) {
+            System.out.println("The offer that cannot be modified due to being completed.\n");
             return;
         }
 

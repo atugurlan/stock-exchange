@@ -46,6 +46,10 @@ public class Offer {
         return offerType;
     }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
     public void setNoOfStock(int noOfStock) {
         this.noOfStock = noOfStock;
     }
