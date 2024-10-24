@@ -17,5 +17,6 @@ public class Main {
 
         c1.modifyOfferByPrice(1, 7);
         System.out.println(c1.toString());
+        //a
     }
 }
