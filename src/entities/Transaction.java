@@ -1,17 +1,16 @@
 package entities;
 
 public class Transaction {
-    private int id;
+    private final int id;
     private static int transactionCounter = 1;
-
-    private int sellerID;
-    private int buyerID;
-    private int sellingOfferID;
-    private int buyingOfferID;
-    private StockType nameOfStock;
-    private int noOfTradedStocks;
-    private float priceOfTradedStocks;
-    private float totalPrice;
+    private final int sellerID;
+    private final int buyerID;
+    private final int sellingOfferID;
+    private final int buyingOfferID;
+    private final StockType nameOfStock;
+    private final int noOfTradedStocks;
+    private final int priceOfTradedStocks;
+    private final int totalPrice;
 
     public Transaction(int sellerID,
                        int buyerID,
@@ -19,7 +18,7 @@ public class Transaction {
                        int buyingOfferID,
                        StockType nameOfStock,
                        int noOfTradedStocks,
-                       float priceOfTradedStocks) {
+                       int priceOfTradedStocks) {
         this.id = transactionCounter;
         transactionCounter++;
 

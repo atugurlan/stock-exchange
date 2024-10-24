@@ -12,10 +12,10 @@ public class Main {
         stockWallet1.put(StockType.GOOGLE, 10);
 
         Client c1 = new Client("Client1", 30, stockWallet1);
-        c1.postOffer(StockType.AMAZON, 5, 5.0, OfferType.BUY);
+        c1.postOffer(StockType.AMAZON, 5, 5, OfferType.BUY);
         System.out.println(c1.toString());
 
-        c1.modifyOffer(1, 7.0);
+        c1.modifyOfferByPrice(1, 7);
         System.out.println(c1.toString());
     }
 }
