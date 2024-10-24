@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Client {
-    private int id;
+    private final int id;
     private String name;
     private static int clientCount = 1;
     private ArrayList<Transaction> transactionHistory;
     private ArrayList<Offer> offerHistory;
-    private final float moneyWallet;
+    private int moneyWallet;
     private Map<StockType, Integer> stockWallet;
 
     public Client(String name,
-                  float moneyWallet,
+                  int moneyWallet,
                   Map<StockType, Integer> stockWallet) {
         this.id = clientCount;
         clientCount++;
@@ -25,7 +25,7 @@ public class Client {
         this.stockWallet = stockWallet;
     }
 
-    public void postOffer(StockType stockName, int noOfStocks, double pricePerStock, OfferType offerType) {
+    public void postOffer(StockType stockName, int noOfStocks, int pricePerStock, OfferType offerType) {
         if(checkOffer(stockName, noOfStocks, pricePerStock, offerType)) {
             Offer newOffer = new Offer(this.id, stockName, noOfStocks, pricePerStock, offerType);
             offerHistory.add(newOffer);
@@ -52,7 +52,7 @@ public class Client {
         System.out.println("Offer was deleted successfully.\n");
     }
 
-    public void modifyOffer(int offerID, int noOfStocks) {
+    public void modifyOfferByStocks(int offerID, int noOfStocks) {
         Offer foundOffer = findOffer(offerID);
 
         if(foundOffer == null) {
@@ -66,7 +66,7 @@ public class Client {
         }
 
         if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, foundOffer.getPriceOfStock(), foundOffer.getOfferType())) {
-            System.out.println("User has not enough stocks to change the number of stock to the wished value in the offer.\n");
+            System.out.println("User does not have enough stocks to change the number of stocks to the desired value in the offer.\n");
             return;
         }
 
@@ -74,7 +74,7 @@ public class Client {
         System.out.println("Successfully changed the number of stocks in the offer with id " + offerID + "\n");
     }
 
-    public void modifyOffer(int offerID, double priceOfStock) {
+    public void modifyOfferByPrice(int offerID, int priceOfStock) {
         Offer foundOffer = findOffer(offerID);
 
         if(foundOffer == null) {
@@ -88,7 +88,7 @@ public class Client {
         }
 
         if(!checkOffer(foundOffer.getNameOfStock(), foundOffer.getNoOfStock(), priceOfStock, foundOffer.getOfferType())) {
-            System.out.println("User has not enough money to be able to pay the new prices.\n");
+            System.out.println("User does not have enough money to be able to pay the new price.\n");
             return;
         }
 
@@ -96,7 +96,7 @@ public class Client {
         System.out.println("Successfully changed the price per stock in the offer with id " + offerID + "\n");
     }
 
-    public void modifyOffer(int offerID, int noOfStocks, double priceOfStock) {
+    public void modifyOfferByStocksAndPrice(int offerID, int noOfStocks, int priceOfStock) {
         Offer foundOffer = findOffer(offerID);
 
         if(foundOffer == null) {
@@ -110,7 +110,7 @@ public class Client {
         }
 
         if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, priceOfStock, foundOffer.getOfferType())) {
-            System.out.println("User has not enough money to be able to pay the new prices.\n");
+            System.out.println("User does not have enough money to be able to pay the new price.\n");
             return;
         }
 
@@ -138,7 +138,7 @@ public class Client {
             str.append("There were no offers made.").append("\n");
         }
         else {
-            str.append("Created offers by the user").append("\n");
+            str.append("Created offers by the user:").append("\n");
             str.append("------------------------------------------------------------").append("\n");
             for(Offer offer : this.offerHistory) {
                 str.append(offer.toString());
@@ -150,7 +150,7 @@ public class Client {
             str.append("There were no transactions closed.").append("\n");
         }
         else {
-            str.append("Transactions for this user").append("\n");
+            str.append("Transactions for this user:").append("\n");
             str.append("------------------------------------------------------------").append("\n");
             for(Transaction transaction : this.transactionHistory) {
                 str.append(transaction.toString());
@@ -171,12 +171,12 @@ public class Client {
         return null;
     }
 
-    private boolean checkOffer(StockType stockName, int noOfStocks, double pricePerStock, OfferType offerType) {
+    private boolean checkOffer(StockType stockName, int noOfStocks, int pricePerStock, OfferType offerType) {
         if(offerType == OfferType.BUY) {
             //check if the user has money
-            double price = noOfStocks * pricePerStock;
+            int price = noOfStocks * pricePerStock;
             if(price > this.moneyWallet) {
-                System.out.println("User hasn't enough money to create this offer.\n");
+                System.out.println("User does not have enough money to create this offer.\n");
                 return false;
             }
         }
@@ -190,7 +190,7 @@ public class Client {
 
                     Integer noOfStocksInWallet = stock.getValue();
                     if(noOfStocksInWallet < noOfStocks) {
-                        System.out.println("The stock is available, but the client does not have enough actions to create the offer.\n");
+                        System.out.println("The stock is available, but the client does not have enough stocks to create the offer.\n");
                         return false;
                     }
                 }

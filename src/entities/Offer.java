@@ -1,19 +1,19 @@
 package entities;
 
 public class Offer {
-    private int offerID;
+    private final int offerID;
     private static int offerCount = 1;
-    private int clientID;
-    private StockType nameOfStock;
+    private final int clientID;
+    private final StockType nameOfStock;
     private int noOfStock;
-    private double priceOfStock;
-    private OfferType offerType;
+    private int priceOfStock;
+    private final OfferType offerType;
     private boolean isCompleted;
 
     public Offer(int clientID,
                  StockType nameOfStock,
                  int noOfStock,
-                 double priceOfStock,
+                 int priceOfStock,
                  OfferType offerType) {
         this.offerID = offerCount;
         offerCount++;
@@ -38,7 +38,7 @@ public class Offer {
         return noOfStock;
     }
 
-    public double getPriceOfStock() {
+    public int getPriceOfStock() {
         return priceOfStock;
     }
 
@@ -54,7 +54,7 @@ public class Offer {
         this.noOfStock = noOfStock;
     }
 
-    public void setPriceOfStock(double priceOfStock) {
+    public void setPriceOfStock(int priceOfStock) {
         this.priceOfStock = priceOfStock;
     }
 
