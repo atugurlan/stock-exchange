@@ -4,6 +4,7 @@ import entities.StockType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Concurrent;
 
 public class Main {
     public static void main(String[] args) {
@@ -12,10 +13,8 @@ public class Main {
         stockWallet1.put(StockType.GOOGLE, 10);
 
         Client c1 = new Client("Client1", 30, stockWallet1);
-        c1.postOffer(StockType.AMAZON, 5, 5.0, OfferType.BUY);
-        System.out.println(c1.toString());
-
-        c1.modifyOffer(1, 7.0);
-        System.out.println(c1.toString());
+        Client c2 = new Client("Client2", 50, stockWallet1);
+        Client c3 = new Client("Client3", 50, stockWallet1);
+        Client c4 = new Client("Client4", 50, stockWallet1);
     }
 }
