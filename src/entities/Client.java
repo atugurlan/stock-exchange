@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class Client {
+    public int getId() {
+        return id;
+    }
+
     private final int id;
     private String name;
     private static int clientCount = 1;
@@ -29,6 +33,9 @@ public class Client {
         if(checkOffer(stockName, noOfStocks, pricePerStock, offerType)) {
             Offer newOffer = new Offer(this.id, stockName, noOfStocks, pricePerStock, offerType);
             offerHistory.add(newOffer);
+
+            Matcher.addOffer(newOffer);
+            Matcher.matchOffer(newOffer);
         }
         else {
             System.out.println("The offer was not created.\n");
@@ -116,6 +123,20 @@ public class Client {
 
         foundOffer.setPriceOfStock(priceOfStock);
         System.out.println("Successfully changed the number of stocks and price per stock in the offer with id " + offerID + "\n");
+    }
+
+    public void addTransaction(Transaction transaction) {
+        transactionHistory.add(transaction);
+    }
+
+    public void updateBuyerWallet(StockType nameOfStock, int noOfTradedOfStocks, int transactionPrice) {
+        this.stockWallet.put(nameOfStock, this.stockWallet.getOrDefault(nameOfStock, 0) + noOfTradedOfStocks);
+        this.moneyWallet -= transactionPrice;
+    }
+
+    public void updateSellerWallet(StockType nameOfStock, int noOfTradedOfStocks, int transactionPrice) {
+        this.stockWallet.put(nameOfStock, this.stockWallet.get(nameOfStock) - noOfTradedOfStocks);
+        this.moneyWallet += transactionPrice;
     }
 
     public String toString() {

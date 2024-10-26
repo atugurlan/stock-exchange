@@ -1,4 +1,5 @@
 import entities.Client;
+import entities.ClientManager;
 import entities.OfferType;
 import entities.StockType;
 
@@ -11,12 +12,21 @@ public class Main {
         stockWallet1.put(StockType.AMAZON, 10);
         stockWallet1.put(StockType.GOOGLE, 10);
 
-        Client c1 = new Client("Client1", 30, stockWallet1);
-        c1.postOffer(StockType.AMAZON, 5, 5, OfferType.BUY);
-        System.out.println(c1.toString());
+        Client c1 = new Client("Client1", 1000, stockWallet1);
+        ClientManager.addClient(c1);
+        c1.postOffer(StockType.AMAZON, 5, 9, OfferType.BUY);
+        c1.postOffer(StockType.AMAZON, 6, 5, OfferType.BUY);
+        c1.postOffer(StockType.AMAZON, 7, 17, OfferType.BUY);
+        c1.postOffer(StockType.AMAZON, 8, 5, OfferType.BUY);
 
-        c1.modifyOfferByPrice(1, 7);
-        System.out.println(c1.toString());
-        //a
+        Map<StockType, Integer> stockWallet2 = new HashMap<>();
+        stockWallet2.put(StockType.AMAZON, 10);
+        stockWallet2.put(StockType.GOOGLE, 10);
+
+        Client c2 = new Client("Client2", 1000, stockWallet2);
+        ClientManager.addClient(c2);
+        c2.postOffer(StockType.AMAZON, 8, 5, OfferType.SELL);
+
+        ClientManager.print();
     }
 }

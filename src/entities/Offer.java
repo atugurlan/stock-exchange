@@ -30,6 +30,10 @@ public class Offer {
         return this.offerID;
     }
 
+    public int getClientID() {
+        return this.clientID;
+    }
+
     public StockType getNameOfStock() {
         return nameOfStock;
     }
@@ -60,6 +64,19 @@ public class Offer {
 
     public void setIsCompleted() {
         this.isCompleted = true;
+    }
+
+    public int matchNumberOfStocks(Offer otherOffer) {
+        return Math.min(this.noOfStock, otherOffer.getNoOfStock());
+    }
+
+    public void updateOfferAfterMatching(int noTradedStocks) {
+        this.noOfStock -= noTradedStocks;
+
+        if(this.noOfStock == 0) {
+            this.setIsCompleted();
+            Matcher.removeOffer(this);
+        }
     }
 
     public String toString() {
