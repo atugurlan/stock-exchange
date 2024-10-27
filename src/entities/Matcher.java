@@ -38,35 +38,47 @@ public class Matcher {
     }
 
     public static void matchOffer(Offer offer) {
-        HashMap<StockType, HashMap<Integer, ArrayList<Offer>>> existingOffers = (offer.getOfferType() == OfferType.BUY) ? sellOffers : buyOffers;
+        if(offer.matcherLock.tryLock()) {
+            try {
+                HashMap<StockType, HashMap<Integer, ArrayList<Offer>>> existingOffers = (offer.getOfferType() == OfferType.BUY) ? sellOffers : buyOffers;
 
-        StockType offerStockType = offer.getNameOfStock();
-        int offerPrice = offer.getPriceOfStock();
+                StockType offerStockType = offer.getNameOfStock();
+                int offerPrice = offer.getPriceOfStock();
 
-        if(!existingOffers.containsKey(offerStockType)) {
-            System.out.println("There are no offers with that stock name.");
-            return;
+                if(!existingOffers.containsKey(offerStockType)) {
+                    System.out.println("There are no offers with that stock name.");
+                    return;
+                }
+
+                HashMap<Integer, ArrayList<Offer>> existingOffersByPrice = existingOffers.get(offerStockType);
+
+                if(!existingOffersByPrice.containsKey(offerPrice)) {
+                    System.out.println("There are no offers with the same price as the offer.");
+                    return;
+                }
+
+                ArrayList<Offer> existingOffersAtPrice = existingOffersByPrice.get(offerPrice);
+                Offer matchedOffer = existingOffersAtPrice.getFirst();
+
+                if(matchedOffer.matcherLock.tryLock()) {
+                    try {
+                        int tradedNumberOfStocks = offer.matchNumberOfStocks(matchedOffer);
+
+                        offer.updateOfferAfterMatching(tradedNumberOfStocks);
+                        matchedOffer.updateOfferAfterMatching(tradedNumberOfStocks);
+
+                        Offer buyingOffer = (offer.getOfferType() == OfferType.BUY) ? offer : matchedOffer;
+                        Offer sellingOffer = (offer.getOfferType() == OfferType.SELL) ? offer : matchedOffer;
+
+                        createTransaction(buyingOffer, sellingOffer, tradedNumberOfStocks);
+                    } finally {
+                        matchedOffer.matcherLock.unlock();
+                    }
+                }
+            } finally {
+                offer.matcherLock.unlock();
+            }
         }
-
-        HashMap<Integer, ArrayList<Offer>> existingOffersByPrice = existingOffers.get(offerStockType);
-
-        if(!existingOffersByPrice.containsKey(offerPrice)) {
-            System.out.println("There are no offers with the same price as the offer.");
-            return;
-        }
-
-        ArrayList<Offer> existingOffersAtPrice = existingOffersByPrice.get(offerPrice);
-        Offer matchedOffer = existingOffersAtPrice.getFirst();
-
-        int tradedNumberOfStocks = offer.matchNumberOfStocks(matchedOffer);
-
-        offer.updateOfferAfterMatching(tradedNumberOfStocks);
-        matchedOffer.updateOfferAfterMatching(tradedNumberOfStocks);
-
-        Offer buyingOffer = (offer.getOfferType() == OfferType.BUY) ? offer : matchedOffer;
-        Offer sellingOffer = (offer.getOfferType() == OfferType.SELL) ? offer : matchedOffer;
-
-        createTransaction(buyingOffer, sellingOffer, tradedNumberOfStocks);
     }
 
     private static void createTransaction(Offer buyingOffer, Offer sellingOffer, int noOfTradedStocks) {
@@ -108,5 +120,20 @@ public class Matcher {
         if(existingOffersByPrice.isEmpty()) {
             existingOffers.remove(stockType);
         }
-     }
+    }
+
+    public static void sendToBack(Offer offer) {
+        StockType stockType = offer.getNameOfStock();
+        int price = offer.getPriceOfStock();
+
+        HashMap<StockType, HashMap<Integer, ArrayList<Offer>>> existingOffers = (offer.getOfferType() == OfferType.BUY) ? buyOffers : sellOffers;
+        HashMap<Integer, ArrayList<Offer>> existingOffersByPrice = existingOffers.get(stockType);
+        ArrayList<Offer> offers = existingOffersByPrice.get(price);
+
+//        System.out.println(offers);
+        offers.remove(offer);
+//        System.out.println(offers);
+        offers.add(offer);
+//        System.out.println(offers);
+    }
 }
