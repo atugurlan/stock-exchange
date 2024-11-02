@@ -135,8 +135,8 @@ public class Client {
                     return;
                 }
 
-                foundOffer.setPriceOfStock(priceOfStock);
                 foundOffer.setNoOfStock(noOfStocks);
+                foundOffer.setPriceOfStock(priceOfStock);
                 System.out.println("Successfully changed the number of stocks and price per stock in the offer with id " + offerID + "\n");
             } finally {
                 foundOffer.matcherLock.unlock();
