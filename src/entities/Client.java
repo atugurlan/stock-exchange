@@ -67,18 +67,24 @@ public class Client {
             return;
         }
 
-        if(foundOffer.isCompleted()) {
-            System.out.println("The offer that cannot be modified due to being completed.\n");
-            return;
-        }
+        if(foundOffer.matcherLock.tryLock()) {
+            try {
+                if(foundOffer.isCompleted()) {
+                    System.out.println("The offer that cannot be modified due to being completed.\n");
+                    return;
+                }
 
-        if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, foundOffer.getPriceOfStock(), foundOffer.getOfferType())) {
-            System.out.println("User does not have enough stocks to change the number of stocks to the desired value in the offer.\n");
-            return;
-        }
+                if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, foundOffer.getPriceOfStock(), foundOffer.getOfferType())) {
+                    System.out.println("User does not have enough stocks to change the number of stocks to the desired value in the offer.\n");
+                    return;
+                }
 
-        foundOffer.setNoOfStock(noOfStocks);
-        System.out.println("Successfully changed the number of stocks in the offer with id " + offerID + "\n");
+                foundOffer.setNoOfStock(noOfStocks);
+                System.out.println("Successfully changed the number of stocks in the offer with id " + offerID + "\n");
+            } finally {
+                foundOffer.matcherLock.unlock();
+            }
+        }
     }
 
     public void modifyOfferByPrice(int offerID, int priceOfStock) {
@@ -89,18 +95,24 @@ public class Client {
             return;
         }
 
-        if(foundOffer.isCompleted()) {
-            System.out.println("The offer that cannot be modified due to being completed.\n");
-            return;
-        }
+        if(foundOffer.matcherLock.tryLock()) {
+            try {
+                if (foundOffer.isCompleted()) {
+                    System.out.println("The offer that cannot be modified due to being completed.\n");
+                    return;
+                }
 
-        if(!checkOffer(foundOffer.getNameOfStock(), foundOffer.getNoOfStock(), priceOfStock, foundOffer.getOfferType())) {
-            System.out.println("User does not have enough money to be able to pay the new price.\n");
-            return;
-        }
+                if (!checkOffer(foundOffer.getNameOfStock(), foundOffer.getNoOfStock(), priceOfStock, foundOffer.getOfferType())) {
+                    System.out.println("User does not have enough money to be able to pay the new price.\n");
+                    return;
+                }
 
-        foundOffer.setPriceOfStock(priceOfStock);
-        System.out.println("Successfully changed the price per stock in the offer with id " + offerID + "\n");
+                foundOffer.setPriceOfStock(priceOfStock);
+                System.out.println("Successfully changed the price per stock in the offer with id " + offerID + "\n");
+            } finally {
+                foundOffer.matcherLock.unlock();
+            }
+        }
     }
 
     public void modifyOfferByStocksAndPrice(int offerID, int noOfStocks, int priceOfStock) {
@@ -111,18 +123,25 @@ public class Client {
             return;
         }
 
-        if(foundOffer.isCompleted()) {
-            System.out.println("The offer that cannot be modified due to being completed.\n");
-            return;
-        }
+        if(foundOffer.matcherLock.tryLock()) {
+            try {
+                if(foundOffer.isCompleted()) {
+                    System.out.println("The offer that cannot be modified due to being completed.\n");
+                    return;
+                }
 
-        if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, priceOfStock, foundOffer.getOfferType())) {
-            System.out.println("User does not have enough money to be able to pay the new price.\n");
-            return;
-        }
+                if(!checkOffer(foundOffer.getNameOfStock(), noOfStocks, priceOfStock, foundOffer.getOfferType())) {
+                    System.out.println("User does not have enough money to be able to pay the new price.\n");
+                    return;
+                }
 
-        foundOffer.setPriceOfStock(priceOfStock);
-        System.out.println("Successfully changed the number of stocks and price per stock in the offer with id " + offerID + "\n");
+                foundOffer.setPriceOfStock(priceOfStock);
+                foundOffer.setNoOfStock(noOfStocks);
+                System.out.println("Successfully changed the number of stocks and price per stock in the offer with id " + offerID + "\n");
+            } finally {
+                foundOffer.matcherLock.unlock();
+            }
+        }
     }
 
     public void addTransaction(Transaction transaction) {
